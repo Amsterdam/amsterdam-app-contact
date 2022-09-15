@@ -52,7 +52,8 @@ as_city_offices = {
                                   'visitingHours': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_OBJECT, properties={
                                       'regular': opening_hours_regular,
                                       'exceptions': opening_hours_exceptions
-                                  }))
+                                  })),
+                                  'order': openapi.Schema(type=openapi.TYPE_INTEGER, description='order of city offices')
                               })),
                               examples={'application/json': {'status': True, 'result': {}}})
     },

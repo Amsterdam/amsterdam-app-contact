@@ -28,7 +28,7 @@ class CityOffices(models.Model):
     appointment = models.JSONField(null=True, blank=True, default=dict)
     visiting_hours_content = models.TextField(null=True, blank=True)
     address_content = models.JSONField(null=True, blank=True, default=dict)
-    order = models.IntegerField(max_length=2)
+    order = models.IntegerField()
 
     class Meta:
         unique_together = [['lat', 'lon']]

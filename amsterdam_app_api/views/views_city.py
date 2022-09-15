@@ -4,6 +4,7 @@ from amsterdam_app_api.models import CityOffices
 from amsterdam_app_api.models import CityOfficesOpeningHoursRegular, CityOfficesOpeningHoursExceptions
 from amsterdam_app_api.swagger.swagger_views_city_offices import as_city_offices, as_waiting_times
 from amsterdam_app_api.GenericFunctions.StaticData import StaticData
+from amsterdam_app_api.GenericFunctions.Sort import Sort
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -37,10 +38,10 @@ def get_opening_hours(identifier):
 @api_view(['GET'])
 def city_offices(request):
     offices = list(CityOffices.objects.all())
-    result = []
+    data = []
     for office in offices:
         opening_hours = get_opening_hours(office.identifier)
-        data = {
+        city_office = {
             'identifier': office.identifier,
             'title': office.title,
             'image': office.images,
@@ -58,9 +59,13 @@ def city_offices(request):
             'directionsUrl': office.directions_url,
             'appointment': office.appointment,
             'visitingHoursContent': office.visiting_hours_content,
-            'visitingHours': opening_hours
+            'visitingHours': opening_hours,
+            'order': office.order
         }
-        result.append(data)
+        data.append(city_office)
+
+    sort = Sort()
+    result = sort.list_of_dicts(data, key='order', sort_order='asc')
     return Response({'status': True, 'result': result})
 
 
