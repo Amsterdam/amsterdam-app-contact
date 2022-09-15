@@ -24,10 +24,11 @@ class CityOffices(models.Model):
     city = models.CharField(max_length=100, blank=False)
     lat = models.FloatField(blank=False)
     lon = models.FloatField(blank=False)
-    directions_url = models.CharField(max_length=100, blank=True)
+    directions_url = models.CharField(max_length=1000, blank=True)
     appointment = models.JSONField(null=True, blank=True, default=dict)
     visiting_hours_content = models.TextField(null=True, blank=True)
     address_content = models.JSONField(null=True, blank=True, default=dict)
+    order = models.IntegerField(max_length=2)
 
     class Meta:
         unique_together = [['lat', 'lon']]
