@@ -19,14 +19,22 @@ function is_db_alive {
       2) printf "\rchecking for database: |";;
       3) printf "\rchecking for database: /";;
     esac
-    [ "${state}" = "3" ] && state=0 || state=$((state+1))
+    state=`expr $((state+1)) % 4`
     sleep 0.1
   done
   printf '\rChecking for database -> db alive\n'
 }
 
 function set_header {
-    printf "\nInitializing Amsterdam-App-Contact\n"
+  printf "\nInitializing Amsterdam-App-Contact\n"
+}
+
+function create_db {
+# WARNING: DO NOT INDENT A HERE DOCUMENT
+psql "user=${POSTGRES_USER} password=${POSTGRES_PASSWORD} host=${POSTGRES_HOST} dbname=${POSTGRES_DB_BACKEND}" <<-EOF
+CREATE DATABASE "${POSTGRES_DB}";
+GRANT ALL PRIVILEGES ON DATABASE "${POSTGRES_DB}" TO "${POSTGRES_USER}";
+EOF
 }
 
 function make_migrations {
@@ -61,6 +69,7 @@ function enter_infinity_loop {
 
 is_db_alive
 set_header
+create_db
 make_migrations
 add_static_files
 enter_infinity_loop
