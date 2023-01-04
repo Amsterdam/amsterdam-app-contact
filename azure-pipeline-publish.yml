@@ -12,7 +12,7 @@ variables:
   # Container registry service connection established during pipeline creation
   # dockerRegistryServiceConnection: 'aappweuacro5pqx6la5m2zha' ## Review Service Connections
   dockerRegistryServiceConnection: 'ce324ba7-efdd-41b7-b601-322263d7825e'
-  imageRepository: 'amsterdam-app-backend'
+  imageRepository: 'amsterdam-app-contact'
   containerRegistry: 'aappweuacro5pqx6la5m2zha.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildNumber)'
