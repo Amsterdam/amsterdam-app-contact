@@ -20,9 +20,9 @@ variables:
     value: '$(Build.SourcesDirectory)/Dockerfile'
   - name: tag
     value: '$(Build.BuildNumber)'
-
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  - name: vmImageName
+    value: 'ubuntu-latest'
 
 stages:
 - stage: Build
