@@ -8,16 +8,21 @@ resources:
 - repo: self
 
 variables:
-  group: acr-ontwikkel 
+  - group: acr-ontwikkel 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: $(docker-registry-service-connection)
-  imageRepository: 'amsterdam-app-contact'
-  containerRegistry: $(container-registry)
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildNumber)'
-
+  - name: dockerRegistryServiceConnection
+    value: $(docker-registry-service-connection)
+  - name: imageRepository
+    value: 'amsterdam-app-contact'
+  - name: containerRegistry
+    value: $(container-registry)
+  - name: dockerfilePath
+    value: '$(Build.SourcesDirectory)/Dockerfile'
+  - name: tag
+    value: '$(Build.BuildNumber)'
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  - name: vmImageName
+    value: 'ubuntu-latest'
 
 stages:
 - stage: Build
