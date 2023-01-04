@@ -8,10 +8,11 @@ resources:
 - repo: self
 
 variables:
+  group: acr-ontwikkel 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'ce324ba7-efdd-41b7-b601-322263d7825e' ## Review Service Connections
+  dockerRegistryServiceConnection: $(docker-registry-service-connection)
   imageRepository: 'amsterdam-app-contact'
-  containerRegistry: 'aappweuacro5pqx6la5m2zha.azurecr.io'
+  containerRegistry: $(container-registry)
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildNumber)'
 
