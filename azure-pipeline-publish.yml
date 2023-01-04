@@ -8,7 +8,7 @@ resources:
 - repo: self
 
 variables:
-  group: acr-ontwikkel 
+  - group: acr-ontwikkel 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: $(docker-registry-service-connection)
   imageRepository: 'amsterdam-app-contact'
