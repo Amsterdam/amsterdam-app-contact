@@ -8,6 +8,10 @@
     docker buildx build --platform=linux/amd64 . -t registry-ams.luscinia-solutions.com/contact-api:tst-latest
     docker buildx build --platform=linux/amd64 . -t registry-ams.luscinia-solutions.com/contact-api:prd-latest
 
+### Run pylinter
+
+    pylint $(find . -name '*.py' | grep -v -e venv -e migrations -e kladblok)
+
 ### Branches
 The _main_ branch is the current stable release where the _main_ branch (made from _main_) is the upcoming
 stable. From the _develop_ feature branches are derived and merged back on _develop_

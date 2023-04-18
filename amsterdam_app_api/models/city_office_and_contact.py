@@ -1,3 +1,4 @@
+""" DB models """
 from django.db import models
 
 DAYS = [
@@ -15,6 +16,7 @@ MINUTES = [(x, x) for x in range(0, 60)]
 
 
 class CityOffices(models.Model):
+    """ Model for City Offices """
     identifier = models.CharField(max_length=100, blank=False, unique=True, primary_key=True)
     title = models.CharField(max_length=100, blank=False)
     images = models.JSONField(null=True, default=dict)
@@ -35,6 +37,7 @@ class CityOffices(models.Model):
 
 
 class CityOfficesOpeningHoursRegular(models.Model):
+    """ Model for City Offices Opening Hours Regular """
     city_office_id = models.ForeignKey('CityOffices', on_delete=models.CASCADE)
     day_of_week = models.IntegerField(choices=DAYS, blank=False, unique=False)
     opens_hours = models.IntegerField(choices=HOURS, blank=False, unique=False)
@@ -44,6 +47,7 @@ class CityOfficesOpeningHoursRegular(models.Model):
 
 
 class CityOfficesOpeningHoursExceptions(models.Model):
+    """ Model for City Offices Opening Hours Exceptions """
     city_office_id = models.ForeignKey('CityOffices', on_delete=models.CASCADE)
     date = models.DateField(null=False)  # YYYY-MM-DD format
     opens_hours = models.IntegerField(choices=HOURS, null=True, blank=True, unique=False)

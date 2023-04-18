@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+""" Django's command-line utility for administrative tasks. """
 import os
 import sys
 
 
 def source_environment():
+    """ Source env file
+    :return:
+    """
     cwd = os.getcwd()
     env_file = os.path.join(cwd, 'env')
     if os.path.isfile(env_file):
@@ -19,18 +22,19 @@ def source_environment():
                     os.environ[key] = value
             except Exception as error:
                 print('Caught error in reading enviroment file: {error}'.format(error=error))
-                exit(False)
+                sys.exit(1)
     else:
         print('No environment file found: {env_file}. Hint: set_env.py'.format(env_file=env_file))
-        exit(False)
+        sys.exit(1)
 
 
 def main():
+    """ Main entry point of django """
     is_testing = 'test' in sys.argv
     if is_testing:
         os.environ['DEBUG'] = 'true'
 
-    """Run administrative tasks."""
+    # Run administrative tasks.
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'amsterdam_app_backend.settings')
     try:
         from django.core.management import execute_from_command_line
@@ -42,7 +46,7 @@ def main():
         ) from exc
 
     # Source environment file (DB settings) if DEBUG=true
-    if os.getenv('DEBUG', False) == 'true':
+    if bool(os.getenv('DEBUG', 'False') == 'true'):
         source_environment()
 
     # print friendly message for easy access to apidocs

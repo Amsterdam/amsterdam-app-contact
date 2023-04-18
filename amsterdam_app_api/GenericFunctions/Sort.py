@@ -1,3 +1,4 @@
+""" Sort class """
 from amsterdam_app_api.GenericFunctions.Logger import Logger
 
 
@@ -8,6 +9,7 @@ class Sort:
         self.logger = Logger()
 
     def list_of_dicts(self, items, key=None, sort_order='asc'):
+        """ Sort list of dictionaries """
         try:
             if key is not None:
                 reverse = sort_order == 'desc'
