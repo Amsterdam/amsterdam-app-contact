@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+""" Injection dict for stadsdelen """
 import json
 
 
@@ -61,7 +63,7 @@ stadsdelen = [
 ]
 
 for images in stadsdelen:
-      stadsdeel = {"type": "", "sources": {}}
-      for image in images:
-            stadsdeel['sources'][image['size']] = image
-      print(json.dumps(stadsdeel))
+    stadsdeel = {"type": "", "sources": {}}
+    for image in images:
+        stadsdeel['sources'][image['size']] = image
+    print(json.dumps(stadsdeel))

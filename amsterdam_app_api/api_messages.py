@@ -3,6 +3,7 @@
 
 
 class Messages:
+    """ Generic API responses """
     def __init__(self):
         self.access_denied = 'ACCESS DENIED'
         self.distance_params = 'Use either street + num or lat/lon'

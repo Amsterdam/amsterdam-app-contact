@@ -1,6 +1,11 @@
+""" Class with magic numbers """
+
+
 class StaticData:
+    """ Class with magic static numbers """
     @staticmethod
     def city_office_waiting_times_lookup_table():
+        """ Convert city office numbers to db identifiers """
         return {
             '9': 'e9871a7716da02a4c20cfb06f9547005',
             '1': '5d9637689a8b902fa1a13acdf0006d26',
@@ -13,6 +18,7 @@ class StaticData:
 
     @staticmethod
     def urls():
+        """ Set url """
         return {
             'waiting_times': 'https://wachttijdenamsterdam.nl/data'
         }
