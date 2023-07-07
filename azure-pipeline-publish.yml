@@ -7,42 +7,53 @@ trigger:
 resources:
   - repo: self
 
-variables:
-  - group: acr-test
-  # Container registry service connection established during pipeline creation
-  - name: dockerRegistryServiceConnection
-    value: $(docker-registry-service-connection)
-  - name: imageRepository
-    value: "amsterdam-app-contact"
-  - name: containerRegistry
-    value: $(container-registry)
-  - name: dockerfilePath
-    value: "$(Build.SourcesDirectory)/Dockerfile"
-  - name: tag
-    value: "$(Build.BuildNumber)"
-  # Agent VM image name
-  - name: vmImageName
-    value: "ubuntu-latest"
+# variables:
+#   - group: acr-test
+#   # Container registry service connection established during pipeline creation
+#   - name: dockerRegistryServiceConnection
+#     value: $(docker-registry-service-connection)
+#   - name: imageRepository
+#     value: "amsterdam-app-contact"
+#   - name: containerRegistry
+#     value: $(container-registry)
+#   - name: dockerfilePath
+#     value: "$(Build.SourcesDirectory)/Dockerfile"
+#   - name: tag
+#     value: "$(Build.BuildNumber)"
+#   # Agent VM image name
+#   - name: vmImageName
+#     value: "ubuntu-latest"
 
+pool: containerBuilder
+
+variables:
+  RegistryName: saks01weuacrpgpgo5qvmwo
+  RepositoryName: aapp/images
+  Chartname: hello-acr
+  ChartVersion: 1.0.2
+  HELM_EXPERIMENTAL_OCI: 1  
+  
+          
 stages:
   - stage: Build
     displayName: Build and push stage
     jobs:
       - job: Build
         displayName: Build
-        pool:
-          vmImage: $(vmImageName)
         steps:
-          - task: Docker@2
-            displayName: Build and push an image to container registry
-            inputs:
-              command: buildAndPush
-              repository: $(imageRepository)
-              dockerfile: $(dockerfilePath)
-              containerRegistry: $(dockerRegistryServiceConnection)
-              tags: |
-                $(tag)
-                latest
+        - task: Bash@3
+          displayName: Build and push an image to container registry
+          inputs:
+              targetType: 'inline'
+              script: |
+                    az login --identity
+                    az acr login --name $(RegistryName)
+                    az acr repository list --name $(RegistryName)
+                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ChartName):$(ChartVersion) .
+                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ChartName):$(ChartVersion)
+                    #az acr repository show -n $(RegistryName) --repository $(RepositoryName)
+                    az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ChartName)
+
       - job: "Push_to_Github"
         timeoutInMinutes: 30
         pool:
