@@ -29,8 +29,8 @@ pool: containerBuilder
 variables:
   RegistryName: saks01weuacrpgpgo5qvmwo
   RepositoryName: aapp/images
-  Chartname: hello-acr
-  ChartVersion: 1.0.2
+  ImageName: contact
+  ImageVersion: 1.0.2
   HELM_EXPERIMENTAL_OCI: 1  
   
           
@@ -49,10 +49,10 @@ stages:
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
-                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ChartName):$(ChartVersion) .
-                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ChartName):$(ChartVersion)
+                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(ImageVersion) .
+                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(ImageVersion)
                     #az acr repository show -n $(RegistryName) --repository $(RepositoryName)
-                    az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ChartName)
+                    az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
 
       - job: "Push_to_Github"
         timeoutInMinutes: 30
