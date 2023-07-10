@@ -80,7 +80,7 @@ stages:
 
       - job: "Push_to_Github"
         timeoutInMinutes: 30
-        condition: succeeded()
+        #condition: succeeded()
         pool:
           vmImage: macOS-12
         variables:
