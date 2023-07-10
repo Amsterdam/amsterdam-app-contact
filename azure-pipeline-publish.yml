@@ -58,14 +58,15 @@ stages:
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
-                    TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))
-                    #echo "##vso[task.setvariable variable=TAG_EXISTS]$(cat public/VERSION)"
-                    echo $(TAG_EXISTS)
+                    #TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))
+                    echo "##vso[task.setvariable variable=TAG_EXISTS]$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))"
+                    #echo $(TAG_EXISTS)
                     if [ "$(TAG_EXISTS)" = "" ]
                       then
                         echo 'tag does not exist'
                     else
                       echo 'tag exists'
+                      echo $(TAG_EXISTS)
                     fi   
         - task: Bash@3
           displayName: Build and push an image to container registry
