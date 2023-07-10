@@ -3,9 +3,9 @@ trigger:
     include:
     - '*'
   batch: true
-  branches:
-    include:
-      - main
+  # branches:
+  #   include:
+  #     - main
 
 resources:
   - repo: self
@@ -49,11 +49,11 @@ stages:
           inputs:
               targetType: 'inline'
               script: |
-                    echo "Tag: "  . $(Build.SourceBranchName)
+                    echo "SourceBranchName: "  . $(Build.SourceBranchName)
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
-                    az acr repository show --name $(RegistryName) $(RepositoryName)/$(ImageName):$(ImageVersion)       
+                    az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion)       
         - task: Bash@3
           displayName: Build and push an image to container registry
           inputs:
