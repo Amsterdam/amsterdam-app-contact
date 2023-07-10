@@ -1,4 +1,7 @@
 trigger:
+  tags:
+    include:
+    - '*'
   batch: true
   branches:
     include:
@@ -42,12 +45,22 @@ stages:
         displayName: Build
         steps:
         - task: Bash@3
+          displayName: Check if tag present
+          inputs:
+              targetType: 'inline'
+              script: |
+                    echo "Tag: "  . $(Build.SourceBranchName)
+                    az login --identity
+                    az acr login --name $(RegistryName)
+                    az acr repository list --name $(RegistryName)
+                    az acr repository show --name $(RegistryName) $(RepositoryName)/$(ImageName):$(ImageVersion)       
+        - task: Bash@3
           displayName: Build and push an image to container registry
           inputs:
               targetType: 'inline'
               script: |
-                    az login --identity
-                    az acr login --name $(RegistryName)
+                    #az login --identity
+                    #az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
                     docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(ImageVersion) .
                     docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(ImageVersion)
