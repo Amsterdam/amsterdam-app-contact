@@ -61,6 +61,7 @@ stages:
                     #TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))
                     echo "##vso[task.setvariable variable=TAG_EXISTS]$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))"
                     echo ${TAG_EXISTS}
+                    echo $(TAG_EXISTS)
                     if [ -n "${TAG_EXISTS}" ]; then
                       echo 'tag exists'
                       exit
