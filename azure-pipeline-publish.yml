@@ -6,6 +6,11 @@ trigger:
   # branches:
   #   include:
   #     - main
+  branches:
+    include:
+    - refs/tags/*
+    exclude:
+    - feature/*  
 
 resources:
   - repo: self
@@ -55,7 +60,7 @@ stages:
                     az acr repository list --name $(RegistryName)
                     TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))
                     #echo "##vso[task.setvariable variable=TAG_EXISTS]$(cat public/VERSION)"
-                    echo TAG_EXISTS
+                    echo $(TAG_EXISTS)
                     if [ "$(TAG_EXISTS)" = "" ]
                       then
                         echo 'tag does not exist'
