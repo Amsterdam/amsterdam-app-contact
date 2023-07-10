@@ -55,39 +55,32 @@ stages:
           inputs:
               targetType: 'inline'
               script: |
-                    echo "SourceBranchName: $(Build.SourceBranchName)"
+                    echo "Tag: $(Build.SourceBranchName)"
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
-                    TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))
-                    #echo "##vso[task.setvariable variable=TAG_EXISTS]$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(ImageVersion))"
-                    echo "var value:"
-                    echo "${TAG_EXISTS}"
-                    #echo "2nd:"
-                    #echo $(TAG_EXISTS)
+                    TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName))
+                  
                     if [ -n "${TAG_EXISTS}" ]; then
-                      echo 'tag exists'
+                      echo 'Tag $(Build.SourceBranchName) exists. Exiting pipeline.'
                       exit 1
-                    else
-                      echo 'tag does not exist'
                     fi   
         - task: Bash@3
           displayName: Build and push an image to container registry
-          #condition: and(succeeded(), eq('${{ variables.tagExists }}', false))
           inputs:
               targetType: 'inline'
               script: |
                     #az login --identity
                     #az acr login --name $(RegistryName)
-                    echo ${TAG_EXISTS}
                     az acr repository list --name $(RegistryName)
-                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(ImageVersion) .
-                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(ImageVersion)
+                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName) .
+                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName)
                     #az acr repository show -n $(RegistryName) --repository $(RepositoryName)
                     az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
 
       - job: "Push_to_Github"
         timeoutInMinutes: 30
+        condition: succeeded()
         pool:
           vmImage: macOS-12
         variables:
