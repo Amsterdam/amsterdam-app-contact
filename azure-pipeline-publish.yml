@@ -27,6 +27,7 @@ stages:
     jobs:
       - job: Build
         displayName: Build
+        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
         steps:
         - task: Bash@3
           displayName: Check if tag present
@@ -34,7 +35,6 @@ stages:
               targetType: 'inline'
               script: |
                     echo "Tag: $(Build.SourceBranchName)"
-                    echo "SourceVersion: $(Build.SourceVersion)"
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
@@ -51,8 +51,9 @@ stages:
               script: |
                     az acr repository list --name $(RegistryName)
                     docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName) .
-                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest .
                     docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName)
+                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest .
+                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest
                     az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
 
       - job: "Push_to_Github"
