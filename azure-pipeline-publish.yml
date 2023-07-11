@@ -27,7 +27,7 @@ stages:
         condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
         steps:
         - task: Bash@3
-          displayName: Check if tag present
+          displayName: Check if tag follows semantic versioning
           inputs:
               targetType: 'inline'
               script: |
@@ -36,12 +36,17 @@ stages:
                     # Check semantic version
                     rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
                     if [[ $(Build.SourceBranchName) =~ $rx ]]; then
-                      echo "INFO:<-->Version $(Build.SourceBranchName)"
+                      echo "INFO: Tag $(Build.SourceBranchName)"
                     else
-                      echo "ERROR:<->Unable to validate package version: '$(Build.SourceBranchName)'"
+                      echo "ERROR: Unable to validate tag: '$(Build.SourceBranchName)'"
                       exit 1
                     fi
 
+        - task: Bash@3
+          displayName: Check if tag present
+          inputs:
+              targetType: 'inline'
+              script: |
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
@@ -50,6 +55,8 @@ stages:
                     if [ -n "${TAG_EXISTS}" ]; then
                       echo 'ERROR: tag $(Build.SourceBranchName) exists. Exiting pipeline.'
                       exit 1
+                    else
+                      echo 'INFO: tag $(Build.SourceBranchName) does not exist. Proceeding.'  
                     fi   
         - task: Bash@3
           displayName: Build and push an image to container registry
