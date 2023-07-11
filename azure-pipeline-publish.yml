@@ -31,7 +31,17 @@ stages:
           inputs:
               targetType: 'inline'
               script: |
-                    echo "Tag: $(Build.SourceBranchName)"
+                    #echo "Tag: $(Build.SourceBranchName)"
+
+                    # Check semantic version
+                    rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
+                    if [[ $VERSION =~ $rx ]]; then
+                      echo "INFO:<-->Version $(Build.SourceBranchName)"
+                    else
+                      echo "ERROR:<->Unable to validate package version: '$(Build.SourceBranchName)'"
+                      exit 1
+                    fi
+
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
