@@ -35,7 +35,7 @@ stages:
 
                     # Check semantic version
                     rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
-                    if [[ $VERSION =~ $rx ]]; then
+                    if [[ $(Build.SourceBranchName) =~ $rx ]]; then
                       echo "INFO:<-->Version $(Build.SourceBranchName)"
                     else
                       echo "ERROR:<->Unable to validate package version: '$(Build.SourceBranchName)'"
@@ -48,7 +48,7 @@ stages:
                     TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName))
                   
                     if [ -n "${TAG_EXISTS}" ]; then
-                      echo 'Tag $(Build.SourceBranchName) exists. Exiting pipeline.'
+                      echo 'ERROR: tag $(Build.SourceBranchName) exists. Exiting pipeline.'
                       exit 1
                     fi   
         - task: Bash@3
