@@ -34,12 +34,14 @@ stages:
               targetType: 'inline'
               script: |
                     echo "Tag: $(Build.SourceBranchName)"
+                    echo "SourceVersion: $(Build.SourceVersion)"
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
                     TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName))
                   
                     if [ -n "${TAG_EXISTS}" ]; then
+                      az acr repository delete --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName))
                       echo 'Tag $(Build.SourceBranchName) exists. Exiting pipeline.'
                       exit 1
                     fi   
