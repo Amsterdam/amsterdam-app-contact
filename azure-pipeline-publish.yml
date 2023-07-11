@@ -23,7 +23,7 @@ variables:
 stages:
   - stage: Build
     displayName: Build and push stage
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    #condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
     jobs:
       - job: Build
         displayName: Build
@@ -35,7 +35,6 @@ stages:
               script: |
                     echo "Tag: $(Build.SourceBranchName)"
                     echo "SourceVersion: $(Build.SourceVersion)"
-                    echo "SourceBranch: $(System.PullRequest.SourceBranch)"
                     az login --identity
                     az acr login --name $(RegistryName)
                     az acr repository list --name $(RegistryName)
