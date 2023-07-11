@@ -42,7 +42,6 @@ stages:
                     TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName))
                   
                     if [ -n "${TAG_EXISTS}" ]; then
-                      az acr repository delete --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName) --yes
                       echo 'Tag $(Build.SourceBranchName) exists. Exiting pipeline.'
                       exit 1
                     fi   
