@@ -50,10 +50,8 @@ stages:
               targetType: 'inline'
               script: |
                     az acr repository list --name $(RegistryName)
-                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName) .
+                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName) -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest .
                     docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName)
-                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest .
-                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest
                     az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
 
       # - job: "Push_to_Github"
