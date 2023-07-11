@@ -56,15 +56,15 @@ stages:
                     docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest
                     az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
 
-      - job: "Push_to_Github"
-        timeoutInMinutes: 30
-        pool:
-          vmImage: macOS-12
-        variables:
-          - group: github-authorization
-        steps:
-          - template: ./pipelines/templates/push-repo-to-github.yml
-            parameters:
-              repository: "amsterdam-app-contact"
-              sshKeySecureFile: "Contact-github-ssh"
-              sshPublicKey: $(sshPublicKeyContact)
+      # - job: "Push_to_Github"
+      #   timeoutInMinutes: 30
+      #   pool:
+      #     vmImage: macOS-12
+      #   variables:
+      #     - group: github-authorization
+      #   steps:
+      #     - template: ./pipelines/templates/push-repo-to-github.yml
+      #       parameters:
+      #         repository: "amsterdam-app-contact"
+      #         sshKeySecureFile: "Contact-github-ssh"
+      #         sshPublicKey: $(sshPublicKeyContact)
