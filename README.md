@@ -18,6 +18,10 @@ The definition for the api documentation are in the file 'views_swagger_auto_sch
 ### Developer documentation:
 README-development.md Here you can find among other settings e.g. how to enable debug mode.
 
+### Push to shared ACR
+By tagging the main branch the publish pipeline will be triggered. The reuslting image will be pushed to the shared ACR
+and the tag will be used as the image version number, provided it follows semantic versioning (x.x.x)
+
 ### Setup your database credentials
 ```
     run: chmod +x set_env.py && ./set_env.py
