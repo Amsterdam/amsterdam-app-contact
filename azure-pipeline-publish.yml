@@ -48,5 +48,5 @@ stages:
               script: |
                     az acr repository list --name $(RegistryName)
                     docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName) -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest .
-                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName)
+                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName) -a
                     az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
