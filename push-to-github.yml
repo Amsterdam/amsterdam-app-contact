@@ -1,0 +1,25 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+
+resources:
+  - repo: self
+          
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: "Push_to_Github"
+        timeoutInMinutes: 30
+        pool:
+          vmImage: macOS-12
+        variables:
+          - group: github-authorization
+        steps:
+          - template: ./pipelines/templates/push-repo-to-github.yml
+            parameters:
+              repository: "$(Build.Repository.Name)"
+              sshKeySecureFile: "Contact-github-ssh"
+              sshPublicKey: $(sshPublicKeyContact)
