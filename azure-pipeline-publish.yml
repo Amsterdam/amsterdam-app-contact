@@ -16,10 +16,10 @@ resources:
 
 pool: containerBuilder
 
-
-- template: pipelines/acr/jobs.yaml@templates
-  parameters:
-    imageName: contact 
+jobs:
+  - template: pipelines/acr/jobs.yaml@templates
+    parameters:
+      imageName: contact 
           
 # stages:
 #   - stage: Build
