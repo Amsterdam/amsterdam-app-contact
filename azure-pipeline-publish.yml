@@ -4,11 +4,11 @@ trigger:
     include:
     - refs/tags/* 
 
-  repositories:
-    - repository: templates
-      type: git
-      name: Amsterdam-App/templates
-      ref: refs/tags/1.2.2
+repositories:
+  - repository: templates
+    type: git
+    name: Amsterdam-App/templates
+    ref: refs/tags/1.2.2
 
 pool: containerBuilder
 
