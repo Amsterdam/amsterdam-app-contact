@@ -4,66 +4,66 @@ trigger:
     include:
     - refs/tags/* 
 
-resources:
-  - repo: self
+  repositories:
+    - repository: templates
+      type: git
+      name: Amsterdam-App/templates
+      ref: refs/tags/1.2.2
 
 pool: containerBuilder
 
-variables:
-  RegistryName: saks01weuacrpgpgo5qvmwo
-  RepositoryName: aapp/images
-  ImageName: contact
-  ImageVersion: 1.0.2
-  HELM_EXPERIMENTAL_OCI: 1
-  
+
+- template: pipelines/acr/jobs.yaml@templates
+  parameters:
+    imageName: contact 
           
-stages:
-  - stage: Build
-    displayName: Build and push stage
-    #condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-    jobs:
-      - job: Build
-        displayName: Build
-        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-        steps:
-        - task: Bash@3
-          displayName: Check if tag follows semantic versioning
-          inputs:
-              targetType: 'inline'
-              script: |
-                    #echo "Tag: $(Build.SourceBranchName)"
+# stages:
+#   - stage: Build
+#     displayName: Build and push stage
+#     #condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+#     jobs:
+#       - job: Build
+#         displayName: Build
+#         condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+#         steps:
+#         - task: Bash@3
+#           displayName: Check if tag follows semantic versioning
+#           inputs:
+#               targetType: 'inline'
+#               script: |
+#                     #echo "Tag: $(Build.SourceBranchName)"
 
-                    # Check semantic version
-                    rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
-                    if [[ $(Build.SourceBranchName) =~ $rx ]]; then
-                      echo "INFO: Tag $(Build.SourceBranchName)"
-                    else
-                      echo "ERROR: Unable to validate tag: '$(Build.SourceBranchName)'"
-                      exit 1
-                    fi
+#                     # Check semantic version
+#                     rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
+#                     if [[ $(Build.SourceBranchName) =~ $rx ]]; then
+#                       echo "INFO: Tag $(Build.SourceBranchName)"
+#                     else
+#                       echo "ERROR: Unable to validate tag: '$(Build.SourceBranchName)'"
+#                       exit 1
+#                     fi
 
-        - task: Bash@3
-          displayName: Check if tag present
-          inputs:
-              targetType: 'inline'
-              script: |
-                    az login --identity
-                    az acr login --name $(RegistryName)
-                    az acr repository list --name $(RegistryName)
-                    TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName))
+#         - task: Bash@3
+#           displayName: Check if tag present
+#           inputs:
+#               targetType: 'inline'
+#               script: |
+#                     az login --identity
+#                     az acr login --name $(RegistryName)
+#                     az acr repository list --name $(RegistryName)
+#                     TAG_EXISTS=$(az acr repository show --name $(RegistryName) --image $(RepositoryName)/$(ImageName):$(Build.SourceBranchName))
                   
-                    if [ -n "${TAG_EXISTS}" ]; then
-                      echo 'ERROR: tag $(Build.SourceBranchName) exists. Exiting pipeline.'
-                      exit 1
-                    else
-                      echo 'INFO: tag $(Build.SourceBranchName) does not exist. Proceeding.'  
-                    fi   
-        - task: Bash@3
-          displayName: Build and push an image to container registry
-          inputs:
-              targetType: 'inline'
-              script: |
-                    az acr repository list --name $(RegistryName)
-                    docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName) -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest .
-                    docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName) -a
-                    az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
+#                     if [ -n "${TAG_EXISTS}" ]; then
+#                       echo 'ERROR: tag $(Build.SourceBranchName) exists. Exiting pipeline.'
+#                       exit 1
+#                     else
+#                       echo 'INFO: tag $(Build.SourceBranchName) does not exist. Proceeding.'  
+#                     fi   
+#         - task: Bash@3
+#           displayName: Build and push an image to container registry
+#           inputs:
+#               targetType: 'inline'
+#               script: |
+#                     az acr repository list --name $(RegistryName)
+#                     docker build -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):$(Build.SourceBranchName) -t $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName):latest .
+#                     docker push $(RegistryName).azurecr.io/$(RepositoryName)/$(ImageName) -a
+#                     az acr repository show-tags --name $(RegistryName) --repository $(RepositoryName)/$(ImageName)
